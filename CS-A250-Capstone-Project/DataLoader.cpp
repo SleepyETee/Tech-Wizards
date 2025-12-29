@@ -15,6 +15,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -27,6 +28,11 @@ void DataLoader::loadWorkshops(WorkshopList& workshopList,
     const string& filename)
 {
     ifstream inFile(filename);
+    if (!inFile.is_open())
+    {
+        cerr << "Error: Could not open file '" << filename << "'" << endl;
+        return;
+    }
     string rawLine;
 
     while (getline(inFile, rawLine))
@@ -61,6 +67,11 @@ void DataLoader::loadParticipants(ParticipantList& participantList,
     const string& filename)
 {
     ifstream inFile(filename);
+    if (!inFile.is_open())
+    {
+        cerr << "Error: Could not open file '" << filename << "'" << endl;
+        return;
+    }
     string rawLine;
 
     while (getline(inFile, rawLine))
@@ -86,6 +97,11 @@ void DataLoader::loadRegistration(
     RegistrationManager& registrationManager, const string& filename)
 {
     ifstream inFile(filename);
+    if (!inFile.is_open())
+    {
+        cerr << "Error: Could not open file '" << filename << "'" << endl;
+        return;
+    }
     string rawLine;
 
     while (getline(inFile, rawLine))

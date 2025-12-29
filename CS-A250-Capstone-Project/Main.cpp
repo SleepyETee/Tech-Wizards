@@ -40,6 +40,5 @@ int main()
     processMenu(workshopList, participantList, registrationManager);
 
     cout << endl << endl;
-    system("Pause");
     return 0;
 }

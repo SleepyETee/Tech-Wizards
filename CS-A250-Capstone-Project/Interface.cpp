@@ -15,8 +15,42 @@
 #include "Formatter.h"
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
+
+namespace
+{
+    void clearInvalidInput()
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    int getValidInt(const string& prompt)
+    {
+        int value;
+        cout << prompt;
+        while (!(cin >> value))
+        {
+            clearInvalidInput();
+            cout << "Invalid input. Please enter a number: ";
+        }
+        return value;
+    }
+
+    double getValidDouble(const string& prompt)
+    {
+        double value;
+        cout << prompt;
+        while (!(cin >> value))
+        {
+            clearInvalidInput();
+            cout << "Invalid input. Please enter a number: ";
+        }
+        return value;
+    }
+}
 
 void processMenu(const WorkshopList& workshopList,
     ParticipantList& participantList, RegistrationManager& registration)
@@ -27,8 +61,7 @@ void processMenu(const WorkshopList& workshopList,
     {
         Formatter::displayMenu();
 
-        cout << "\nPlease make a selection: ";
-        cin >> selection;
+        selection = getValidInt("\nPlease make a selection: ");
         cout << endl;
 
         switch (selection)
@@ -70,8 +103,7 @@ void processMenu(const WorkshopList& workshopList,
 void getIdentification(int &participantID, string& firstName,
     string& lastName)
 {
-    cout << "Enter your ID: ";
-    cin >> participantID;
+    participantID = getValidInt("Enter your ID: ");
     cout << "Enter your first name: ";
     cin >> firstName;
     cout << "Enter your last name: ";
@@ -82,6 +114,10 @@ void getIdentification(int &participantID, string& firstName,
 bool verifyIdentification(const ParticipantList& participantList,
     int participantID, const string& firstName, const string& lastName)
 {
+    if (!participantList.participantExists(participantID))
+    {
+        return false;
+    }
     return participantList.getFirstName(participantID) == firstName &&
         participantList.getLastName(participantID) == lastName;
 }
@@ -99,10 +135,7 @@ void viewOpenWorkshops(const WorkshopList& workshopList,
 
 void viewWorkshopsByPrice(const WorkshopList& workshopList)
 {
-    cout << "Enter max price: $";
-    double maxPrice = 0.0;
-    cin >> maxPrice;
-
+    double maxPrice = getValidDouble("Enter max price: $");
     Formatter::printWorkshopsByPrice(workshopList, maxPrice);
 }
 
@@ -129,10 +162,7 @@ void registerForWorkshop(const WorkshopList& workshopList,
 
     viewOpenWorkshops(workshopList, registration);
 
-    cout << "\nEnter the workshop number or '0' to cancel: ";
-
-    int selection = 0;
-    cin >> selection;
+    int selection = getValidInt("\nEnter the workshop number or '0' to cancel: ");
 
     if (selection != 0)
     {
@@ -175,10 +205,7 @@ void cancelRegistration(const WorkshopList& workshopList,
         participantList, id, firstName, lastName))
     {
         Formatter::printParticipantWorkshops(participantList, id);
-        cout << "\nWhich workshop number would you like to cancel? ";
-
-        int selection = 0;
-        cin >> selection;
+        int selection = getValidInt("\nWhich workshop number would you like to cancel? ");
 
         registration.unregisterParticipant(selection, id);
 
